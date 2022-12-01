@@ -72,7 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-
+CSRF_TRUSTED_ORIGINS = ['https://pacil-in-love.up.railway.app/']
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 

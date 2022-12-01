@@ -16,7 +16,7 @@ def loginPage(request):
 
         cursor = connection.cursor()
 
-        cursor.execute("SET SEARCH_PATH TO tkyry")
+        cursor.execute("SET SEARCH_PATH TO public")
         cursor.execute("SELECT * FROM pengguna where username ='"+username+"' and password = '"+password +"'")
         result = cursor.fetchone()
         print(result)
@@ -51,12 +51,12 @@ def registerPage(request):
 
         cursor = connection.cursor()
 
-        cursor.execute("SET SEARCH_PATH TO tkyry")
+        cursor.execute("SET SEARCH_PATH TO public")
         cursor.execute("SELECT * FROM pengguna where username ='"+username+"'")
         result = cursor.fetchone()
 
         if (result == None):
-            cursor.execute("SET SEARCH_PATH TO tkyry")
+            cursor.execute("SET SEARCH_PATH TO public")
             cursor.execute("INSERT INTO pengguna (username, password) VALUES('"+username+"','"+password+"')")
             cursor.execute("INSERT INTO profile (username, email, role) VALUES('"+username+"','"+email+"', 'r002')")
 

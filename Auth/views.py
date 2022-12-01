@@ -28,6 +28,7 @@ def loginPage(request):
         result = cursor.fetchone()
         
         role = result[5]
+        print(role)
 
 
         cursor.execute("SET SEARCH_PATH TO public")
@@ -62,7 +63,7 @@ def registerPage(request):
 
             cursor.execute("select max(id_username) from list_username")
             max_id = cursor.fetchone()[0]
-            max_id += 1;
+            max_id += 1
             cursor.execute("INSERT INTO list_username (id_username, username) VALUES('"+str(max_id)+"','"+username+"')")
 
             return HttpResponseRedirect('/homepage')

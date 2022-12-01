@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'react',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "railway",
+        'NAME': "postgres",
         'USER': "postgres",
         'PASSWORD': "pnCRGjbMt1wlz4Aqbfg5",
         'HOST': "containers-us-west-119.railway.app",

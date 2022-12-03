@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 import Auth.urls as auth
 import Home.urls as home
+import report.urls as report
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(auth)),
     path('homepage/', include(home)),
+    path('report/', include(report))
 ]

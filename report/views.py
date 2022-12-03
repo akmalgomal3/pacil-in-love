@@ -4,6 +4,7 @@ from Auth.urls import *
 from django.shortcuts import *
 import django.db as db
 from django.db import connection
+from Home import *
 
 # Create your views here.
 def report(request):
@@ -16,7 +17,7 @@ def report(request):
     # reason = data[reason]
     if request.method == 'POST':
         username = "bintangns"
-        reason = "Sampah"
+        reason = "rr001"
 
         # username = data['username']
         # reason = data['reason']
@@ -33,22 +34,27 @@ def report(request):
         except db.Error as e:
             message = e
             isValid += 1
-    return render(request, 'home.html', {'message': message})
+    return redirect('home:homepage')
 
 def list_reported(request):
     userUsername = checkLoggedIn(request)
+    reported_user = {}
 
     if not userUsername:
         return redirect('auth:login')
 
-    if request.session['admin']:
+    if request.session['role'] == 'admin':
         cursor = connection.cursor()
         cursor.execute("SET search_path to public")
         
         cursor.execute("SELECT * FROM reported_user")
+    
+        reported_user = cursor.fetchall()
+
+        return render(request, 'reported_user.html', {'reported_user' : reported_user})
 
     else:
-        return redirect('Home:homepage')
+        return redirect('home:homepage')
 
         
 

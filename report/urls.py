@@ -6,5 +6,5 @@ app_name = 'report'
 
 urlpatterns = [
     path('reported-list/', views.list_reported, name='List Reported'),
-    path('', views.report, name='report')
+    path('user/<str:pengguna>', views.report, name='report')
 ]

@@ -7,34 +7,37 @@ from django.db import connection
 from Home import *
 
 # Create your views here.
-def report(request):
+def report(request, pengguna):
     userUsername = checkLoggedIn(request)
-    
+    response = {}
     if not userUsername:
         return redirect('auth:login')
 
-    # username = data[username]
-    # reason = data[reason]
-    if request.method == 'POST':
-        username = "bintangns"
-        reason = "rr001"
+    if request.session['role'] == 'user':
+        cursor = connection.cursor()
+        cursor.execute("set search_path to public")
 
-        # username = data['username']
-        # reason = data['reason']
-        
-        isValid = 0;
+        cursor.execute("SELECT username FROM pengguna where username = %s", [pengguna])
+        nama_pengguna = cursor.fetchall()
+        response['nama_pengguna'] = nama_pengguna
 
+        kode = "rr%"
 
-        try:
-            cursor = connection.cursor()
-            cursor.execute("set search_path to public")
+        cursor.execute("SELECT id_reason from reported_reason where id_reason like %s", [kode])
+        idReason = cursor.fetchall()
+        response['idReason'] = idReason
 
-            cursor.execute("INSERT INTO REPORTED_USER VALUES (%s, %s)", [username, reason])
+        if request.method == 'POST':
+            data = request.POST
+            id_Reason = data['idReason']
+            nama = pengguna
 
-        except db.Error as e:
-            message = e
-            isValid += 1
-    return redirect('home:homepage')
+            cursor.execute("INSERT INTO REPORTED_USER VALUES (%s, %s)", [nama, id_Reason])
+
+            return redirect('/homepage')
+
+        return render(request, 'report.html', response)
+
 
 def list_reported(request):
     userUsername = checkLoggedIn(request)

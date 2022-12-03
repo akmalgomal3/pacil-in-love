@@ -80,3 +80,15 @@ def logout(request):
    except:
         pass
    return redirect('auth:login')
+
+def checkLoggedIn(request):
+    cursor = connection.cursor()
+
+    # check if not logged in
+    userEmail = ''
+    try:
+        cursor.execute("set search_path to public")
+        userEmail = request.session['username']
+    except:
+        return False
+    return userEmail

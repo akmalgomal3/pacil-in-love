@@ -37,3 +37,21 @@ def report(request):
 
 def list_reported(request):
     userUsername = checkLoggedIn(request)
+
+    if not userUsername:
+        return redirect('auth:login')
+
+    if request.session['admin']:
+        cursor = connection.cursor()
+        cursor.execute("SET search_path to public")
+        
+        cursor.execute("SELECT * FROM reported_user")
+
+    else:
+        return redirect('Home:homepage')
+
+        
+
+
+        
+

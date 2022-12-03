@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Auth',
     'Profile',
+    'report',
     'Home'
 ]
 
@@ -79,7 +80,7 @@ CSRF_TRUSTED_ORIGINS = ['https://pacil-in-love.up.railway.app/']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "POSTGRES",
+        'NAME': "railway",
         'USER': "postgres",
         'PASSWORD': "pnCRGjbMt1wlz4Aqbfg5",
         'HOST': "containers-us-west-119.railway.app",

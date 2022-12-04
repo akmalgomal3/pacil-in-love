@@ -3,6 +3,7 @@ from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.db import connection
 from Auth.forms import loginForm, registerForm
+import datetime
 
 # Create your views here.
 def redirectLogin(request):return redirect('auth:login')
@@ -23,6 +24,11 @@ def loginPage(request):
 
         if result == None:
             return HttpResponseNotFound("The user does not exist")
+
+        if result[2] != None:
+            current_datetime = datetime.datetime.now()
+            if ((current_datetime - result[2]).total_seconds() < 300):
+                return HttpResponseNotFound("This user is temporary ban")
 
         cursor.execute("SELECT * FROM profile where username ='"+username+"'")
         result = cursor.fetchone()

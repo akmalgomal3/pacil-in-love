@@ -18,10 +18,14 @@ from django.urls import path, include
 import Auth.urls as auth
 import Home.urls as home
 import report.urls as report
+import LikedBy.urls as likedBy
+import ban.urls as ban
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(auth)),
     path('homepage/', include(home)),
-    path('report/', include(report))
+    path('report/', include(report)),
+    path('likedBy', include(likedBy)),
+    path('ban/', include(ban))
 ]

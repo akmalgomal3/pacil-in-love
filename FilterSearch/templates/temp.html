@@ -1,0 +1,42 @@
+{% load static %}
+
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/penjadwalan/penjadwalan.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+{% endblock %}
+
+
+{% block title %}
+<title>Pekerjaan</title>
+{% endblock title %}
+
+<body>
+
+    <div id="content">
+        <h3>Reported List</h3>
+        <div style="display: block">
+            <table class = "table">
+                <thead>
+                    <tr>
+                        <th scope ="col">Username</th>
+                        <th scope ="col">Reason</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if reported_user %}
+                        {% for i in reported_user %}
+                            <tr id="myUL">
+                                <td>{{ i.0 }}</td>
+                                <td>{{ i.1 }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+        </div>
+
+</body>
+</html>

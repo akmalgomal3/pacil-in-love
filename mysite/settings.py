@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Profile',
     'Home',
     'LikedBy'
+    'ban'
 ]
 
 MIDDLEWARE = [

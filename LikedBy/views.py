@@ -16,9 +16,13 @@ def get_list_liked_by(request):
     
     username = request.session['username']
     cursor.execute(f'''
-    SELECT username FROM LIKE
+    SELECT username FROM "LIKE"
     WHERE liked_user = '%s'
     ''' % (username))
 
     liked_by = cursor.fetchall()
+
+    #DEBUG
+    print(liked_by)
+    #END DEBUG
     return liked_by

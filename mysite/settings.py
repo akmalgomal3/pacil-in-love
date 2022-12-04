@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Auth',
     'Profile',
     'Home',
+    'LikedBy'
     'ban'
 ]
 

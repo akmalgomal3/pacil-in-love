@@ -65,6 +65,6 @@ def dislike(request):
         data = request.POST
         nama = data['user']
 
-        return redirect()
+        return redirect('home:homepage')
     
     return render(request)

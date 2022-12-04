@@ -1,30 +1,70 @@
 from django.db import connection
 from django.shortcuts import redirect, render
+from random import randrange
+
+def fetch(cursor):
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
+
 
 # Create your views here.
 def index(request):
     return redirect("home:index")
     
 def like(request):
-    data = request.POST
+
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
     
     username = request.session['username']
     role = request.session['role']
+
+    # cursor.execute(f'''
+    #                 select max(id_username), 
+    #                 from list_username
+    #                 where username != '%s'
+    #                 ''' % (username))
+
+    # max_random = cursor.fetchone()
+
     
-    cursor.execute("set search_path to tkyry")
-    
+    if request.method == 'POST':
+        data = request.POST
+        nama = data['user']
+
+        print(nama)
+        if nama != '':
+            cursor.execute(f'''
+                insert into "like" values ('%s', '%s')
+            ''' % (username, nama))
+
+            cursor.execute(f'''
+                select liked_user
+                from like
+                where username = '%s'    
+            ''' % (nama))
+
+            list_liked = cursor.fetchall()
+
+            if username in list_liked:
+                return render(request)
+
     return render(request)
 
 def dislike(request):
-    data = request.POST
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
     
     username = request.session['username']
     role = request.session['role']
     
-    cursor.execute("set search_path to tkyry")
+    if request.method == "POST":
+        data = request.POST
+        nama = data['user']
+
+        return redirect()
     
     return render(request)

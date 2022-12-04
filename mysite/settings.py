@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'react',
     'Auth',
     'Profile',
+    'report',
     'Home',
-    'LikedBy'
+    'LikedBy',
     'ban'
 ]
 
@@ -82,11 +83,11 @@ CSRF_TRUSTED_ORIGINS = ['https://pacil-in-love.up.railway.app/']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "railway",
-        'USER': "postgres",
-        'PASSWORD': "pnCRGjbMt1wlz4Aqbfg5",
-        'HOST': "containers-us-west-119.railway.app",
-        'PORT': "6809",
+        'NAME': os.environ["PGDATABASE"],
+        'USER': os.environ["PGUSER"],
+        'PASSWORD': os.environ["PGPASSWORD"],
+        'HOST': os.environ["PGHOST"],
+        'PORT': os.environ["PGPORT"],
     }
 }
 

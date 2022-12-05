@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ban Page for Admin</title>
+</head>
+<body>
+    <p>Anda merupakan Admin</p>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">No</th>
+            <th scope="col">Username</th>
+            <th scope="col">Ban Reason</th>
+            <th scope="col">Timeout Profile</th>
+            <th scope="col">Delete Profile</th>
+          </tr>
+        </thead>
+        
+        <tbody>
+            {% for i in list %}
+        
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{ i.0 }}</td>                 
+                    <td>{{ i.1 }}</td> 
+                    <td>
+                        <a href="timeout_user/{{i.0}}">Timeout</a>
+                    </td>  
+                    <td>
+                        <a href="delete_user/{{i.0}}">Delete</a>
+                    </td>                              
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+</body>
+</html>

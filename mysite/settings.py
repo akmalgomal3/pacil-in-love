@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'react',
+    'Auth',
+    'Profile',
+    'Home',
+    'LikedBy'
+    'ban'
 ]
 
 MIDDLEWARE = [
@@ -55,7 +60,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,14 +75,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-
+CSRF_TRUSTED_ORIGINS = ['https://pacil-in-love.up.railway.app/']
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "postgres",
+        'NAME': "railway",
         'USER': "postgres",
         'PASSWORD': "pnCRGjbMt1wlz4Aqbfg5",
         'HOST': "containers-us-west-119.railway.app",

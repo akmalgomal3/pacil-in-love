@@ -12,7 +12,32 @@ def fetch(cursor):
 
 # Create your views here.
 def index(request):
-    return redirect("home:index")
+
+    cursor = connection.cursor()
+    cursor.execute("set search_path to public")
+
+    username = request.session['username']
+    role = request.session['role']
+
+    cursor.execute(f'''
+                    select id_username 
+                    from list_username
+                    where username != '%s' and id != 1
+                    order by random()
+                    limit 1
+                    ''' % (username))
+
+    user = cursor.fetchone()
+    if user != '':
+        cursor.execute(f'''
+            select *
+            from profile
+            where username = '%s'
+                ''' % (user))
+
+        data_user = fetch(cursor)
+
+    return render(request, 'react_home.html', {'data' : data_user})
     
 def like(request):
 
@@ -22,28 +47,28 @@ def like(request):
     username = request.session['username']
     role = request.session['role']
 
-    # cursor.execute(f'''
-    #                 select max(id_username), 
-    #                 from list_username
-    #                 where username != '%s'
-    #                 ''' % (username))
-
-    # max_random = cursor.fetchone()
-
+    cursor.execute(f'''
+        select liked_user
+        from "like"
+        where username = '%s'    
+    ''' % (username))
     
+    liked_user = cursor.fetchall()
+
     if request.method == 'POST':
         data = request.POST
         nama = data['user']
 
         print(nama)
         if nama != '':
-            cursor.execute(f'''
-                insert into "like" values ('%s', '%s')
-            ''' % (username, nama))
+            if nama not in liked_user:
+                cursor.execute(f'''
+                    insert into "like" values ('%s', '%s')
+                ''' % (username, nama))
 
             cursor.execute(f'''
                 select liked_user
-                from like
+                from "like"
                 where username = '%s'    
             ''' % (nama))
 

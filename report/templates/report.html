@@ -25,36 +25,34 @@
 <title>Report</title>
 {% endblock title %}
 <body>
-    <div id="content">
-        <h3>Report</h3>
-        <form action="" method="POST">
-            {% csrf_token %}
-            <p><b>Informasi Pengguna:</b></p>
-            <label >Nama Pengguna :</label><br>
-                {% if nama_pengguna %}
+
+    <div class="container">
+      
+	<form action="" method="POST">
+      {% csrf_token %}
+      <div class="jumbotron">
+        {% if nama_pengguna %}
                     {% for i in nama_pengguna %}
-            <tr>
-             <td> {{ i.0 }}</td>
-            <div>
-            <body>
-    <div>
-            {% endfor %}
+        <h1 class="display-3">Name : {{ i.0 }}</h1>
+        {% endfor %}
         {% endif %}
-                    <label for="idReason">Reason:</label>
-        <select class="form-control" name="idReason" id="idReason" >
+        <div><label for="idReason">Reason:</label>
+        <select class="form-control" name="idReason" id="idReason">
           <option value="rr001">User ini menganggu</option>
           <option value="rr002">User ini melanggar Guidelines</option>
           <option value="rr003">User ini mengancam</option>
 
-            </select><br>
-    </div>
-
-</body>
-            <div id='button-wrapper'>
+            </select><br></div>
+        <div id="button-wrapper">
                 <button id="submit" type="submit">Report</button>
             </div>
-        </form>
-    </div>
+      </div>
+
+      
+
+    </form></div> <!-- /container -->
+  
+
 </body>
 </html>
 

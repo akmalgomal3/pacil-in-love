@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 import Auth.urls as auth
 import Home.urls as home
+import report.urls as report
 import LikedBy.urls as likedBy
 import ban.urls as ban
 import React.urls as react
@@ -28,4 +29,7 @@ urlpatterns = [
     path('likedBy', include(likedBy)),
     path('ban/', include(ban)),
     path('react/', include(react)),
+    path('report/', include(report)),
+    path('likedBy', include(likedBy)),
+    path('ban/', include(ban))
 ]

@@ -1,0 +1,51 @@
+{% load static %}
+
+
+{% block css %}
+
+{% endblock %}
+
+{% block title %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <title>React</title>
+
+    <!-- Bootstrap core CSS
+    <link href="../../css/editor.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <!-- <link href="narrow-jumbotron.css" rel="stylesheet"> -->
+</head>
+  
+<title>React</title>
+{% endblock title %}
+<body>
+ <p>test</p>
+ {% for data in data %}
+ <h1>{{data.username}}</h1>
+    <!-- <div class="container"> -->
+      
+      <!-- <div class="jumbotron"> -->
+        <!-- {% if data %} -->
+        <h1 class="display-3">Username : {{ data.username }}</h1>
+        <h1 class="display-3">Email : {{ data.email }}</h1>
+        <h1 class="display-3">Nama : {{ data.nama_lengkap }}</h1>
+
+        <div id="button-wrapper">
+            <a class="btn btn-primary" href="{% url 'react:like' data.username %}" role="button">Like</a>
+        </div>
+        <div id="button-wrapper">
+            <a class="btn btn-primary" href="{% url 'react:dislike' %}" role="button">Dislike</a>
+        </div>
+        <!-- {% endif %} -->
+      <!-- </div> -->
+    <!-- </div> /container -->
+  {% endfor %}
+
+</body>
+</html>

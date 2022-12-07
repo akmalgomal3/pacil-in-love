@@ -1,6 +1,8 @@
 from django.db import connection
 from django.shortcuts import redirect, render
-from random import randrange
+
+from Auth.views import checkLoggedIn
+
 
 def fetch(cursor):
     columns = [col[0] for col in cursor.description]
@@ -12,6 +14,8 @@ def fetch(cursor):
 
 # Create your views here.
 def index(request):
+    if not checkLoggedIn(request):
+        return redirect('auth:login')
 
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
@@ -20,26 +24,41 @@ def index(request):
     role = request.session['role']
 
     cursor.execute(f'''
-                    select id_username 
-                    from list_username
-                    where username != '%s' and id != 1
-                    order by random()
-                    limit 1
-                    ''' % (username))
+        select liked_user
+        from "like"
+        where username = '%s'    
+        ''' % (username))
 
-    user = cursor.fetchone()
-    if user != '':
+    liked_user = cursor.fetchall()
+    print(liked_user)
+
+    while True:
         cursor.execute(f'''
-            select *
-            from profile
-            where username = '%s'
-                ''' % (user))
+                        select username
+                        from list_username
+                        where username != '%s' and id_username != 1
+                        order by random()
+                        limit 1
+                        ''' % (username))
 
-        data_user = fetch(cursor)
+        user = cursor.fetchone()
+        if user not in liked_user:
+            break
+
+    print(user)
+    # if user != '':
+    cursor.execute(f'''
+        select *
+        from profile
+        where username = '%s'
+            ''' % (user))
+
+    data_user = fetch(cursor)
+    print(data_user)
 
     return render(request, 'react_home.html', {'data' : data_user})
     
-def like(request):
+def like(request, user):
 
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
@@ -55,41 +74,33 @@ def like(request):
     
     liked_user = cursor.fetchall()
 
-    if request.method == 'POST':
-        data = request.POST
-        nama = data['user']
+    nama = user
 
-        print(nama)
-        if nama != '':
-            if nama not in liked_user:
-                cursor.execute(f'''
-                    insert into "like" values ('%s', '%s')
-                ''' % (username, nama))
-
+    print(nama)
+    if nama != '':
+        if nama not in liked_user:
             cursor.execute(f'''
-                select liked_user
-                from "like"
-                where username = '%s'    
-            ''' % (nama))
+                insert into "like" values ('%s', '%s')
+            ''' % (username, nama))
 
-            list_liked = cursor.fetchall()
+        cursor.execute(f'''
+            select liked_user
+            from "like"
+            where username = '%s'    
+        ''' % (nama))
 
-            if username in list_liked:
-                return render(request)
+        list_liked = cursor.fetchall()
 
-    return render(request)
+        # if username in list_liked:
+        #     return render(request)
+
+    return redirect('react:index')
 
 def dislike(request):
-    cursor = connection.cursor()
-    cursor.execute("set search_path to public")
+    # cursor = connection.cursor()
+    # cursor.execute("set search_path to public")
     
-    username = request.session['username']
-    role = request.session['role']
+    # username = request.session['username']
+    # role = request.session['role']
     
-    if request.method == "POST":
-        data = request.POST
-        nama = data['user']
-
-        return redirect('home:homepage')
-    
-    return render(request)
+    return redirect('react:index')

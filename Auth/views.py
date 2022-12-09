@@ -77,7 +77,7 @@ def registerPage(request):
 
             request.session['username'] = username
             request.session['role'] = 'user'
-            messages.success(request, "Register successed.")
+            messages.success(request, "Register successed. You must create a profile to proceed to the homepage.")
 
             return redirect('profile:create_profile')
         

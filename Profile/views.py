@@ -10,22 +10,37 @@ def profile(request):
         username = request.session['username']
         cursor = connection.cursor()
 
+
         cursor.execute("SET SEARCH_PATH TO public")
         cursor.execute("SELECT * from profile where username = '"+username+"'")
         temp = cursor.fetchone()
+
+        cursor.execute("SELECT * from selected_hobi where username = '"+username+"'")
+        hobi = cursor.fetchall()
+        print(hobi)
+        list_hobi = []
+        for data in hobi:
+            cursor.execute("SELECT nama_hobi from list_hobi where id_hobi = '"+data[1]+"'")
+            list_hobi.append(cursor.fetchone()[0])
+
+
         cursor.close()
         gender = ""
         if temp[2] == 'g001':
             gender = 'Laki-laki'
         elif temp[2] == 'g002':
             gender = 'Perempuan'
+        
+        print(temp[7])
 
         profile = {"name":temp[4],
                     "username":temp[0],
                     "email":temp[1],
                     "jenis_kelamin":gender,
                     "nomor":temp[3],
-                    "umur":temp[6]}
+                    "umur":temp[6],
+                    "image":temp[7],
+                    "hobby":list_hobi}
 
 
 
@@ -43,35 +58,8 @@ def createProfilePage(request):
             gender = form.cleaned_data['gender']
             phone = form.cleaned_data['phone']
             umur = form.cleaned_data['umur']
-
-            cursor = connection.cursor()
-
-            cursor.execute("SET SEARCH_PATH TO public")
-            
-            if gender == 'laki-laki':
-                gender = 'g001'
-            else:
-                gender = 'g002'
-
-            cursor.execute("update profile set gender = '"+gender+"', phone = '"+phone+"', nama_lengkap = '"+name+"', umur = '"+str(umur)+"' where username = '"+username+"'")
-            
-            return redirect('home:homepage')
-    else:
-        return redirect('auth:login')
-    return render(request, 'createProfilePage.html', {'form' : form})
-
-def updateProfilePage(request):
-    form = updateProfileForm(request.POST or None)
-    if request.session.has_key('username'):
-        username = request.session['username']
-        if (form.is_valid() and request.method == 'POST'):
-            name = form.cleaned_data['name']
-            gender = form.cleaned_data['gender']
-            phone = form.cleaned_data['phone']
-            umur = form.cleaned_data['umur']
             image = form.cleaned_data['image']
-
-            print(image)
+            hobby = form.cleaned_data['hobby']
 
             cursor = connection.cursor()
 
@@ -83,6 +71,60 @@ def updateProfilePage(request):
                 gender = 'g002'
 
             cursor.execute("update profile set gender = '"+gender+"', phone = '"+phone+"', nama_lengkap = '"+name+"', umur = '"+str(umur)+"', picture = '"+image+"' where username = '"+username+"'")
+            for hobi in hobby:
+                cursor.execute("INSERT INTO selected_hobi(username, hobi) VALUES ('"+username+"', '"+hobi+"')")
+            
+            return redirect('home:homepage')
+            
+    else:
+        return redirect('auth:login')
+    return render(request, 'createProfilePage.html', {'form' : form})
+
+def updateProfilePage(request):
+
+    if request.session.has_key('username'):
+        username = request.session['username']
+        cursor = connection.cursor()
+        cursor.execute("SET SEARCH_PATH TO public")
+        cursor.execute("SELECT * from profile where username = '"+username+"'")
+        temp = cursor.fetchone()
+        cursor.close()
+        gender = ""
+        if temp[2] == 'g001':
+            gender = 'laki-laki'
+        elif temp[2] == 'g002':
+            gender = 'perempuan'
+
+        form = updateProfileForm(request.POST or None, initial={"name":temp[4],
+                                                                "image":temp[7],
+                                                                "gender":gender,
+                                                                "phone":temp[3],
+                                                                "umur":temp[6],})
+        print(form.is_valid())
+        if (form.is_valid() and request.method == 'POST'):
+            name = form.cleaned_data['name']
+            gender = form.cleaned_data['gender']
+            phone = form.cleaned_data['phone']
+            umur = form.cleaned_data['umur']
+            image = form.cleaned_data['image']
+            hobby = form.cleaned_data['hobby']
+
+            print(hobby)
+
+            cursor = connection.cursor()
+
+            cursor.execute("SET SEARCH_PATH TO public")
+            
+            if gender == 'laki-laki':
+                gender = 'g001'
+            else:
+                gender = 'g002'
+
+            cursor.execute("update profile set gender = '"+gender+"', phone = '"+phone+"', nama_lengkap = '"+name+"', umur = '"+str(umur)+"', picture = '"+image+"' where username = '"+username+"'")
+            cursor.execute("delete from selected_hobi where username = '"+username+"'")
+            for hobi in hobby:
+                cursor.execute("INSERT INTO selected_hobi(username, hobi) VALUES ('"+username+"', '"+hobi+"')")
+
             messages.success(request, "Profile Updated.")
             return redirect('profile:profile')
     else:

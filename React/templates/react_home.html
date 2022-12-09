@@ -26,6 +26,12 @@
 <title>React</title>
 {% endblock title %}
 <body>
+      <div><label for="list_hobi">Filter By:</label>
+        <a href="{% url 'react:index' %}">None</a>
+        {% for i in idsHobby %}
+        <a href="{% url 'react:filterHobby' i.id_hobi%}">{{i.nama_hobi}}</a>
+        {% endfor %}
+      </div>
  {% for data in data %}
     <!-- <div class="container"> -->
       
@@ -34,12 +40,13 @@
         <h1 class="display-3">Username : {{ data.username }}</h1>
         <h1 class="display-3">Email : {{ data.email }}</h1>
         <h1 class="display-3">Nama : {{ data.nama_lengkap }}</h1>
-
+        
         <div id="button-wrapper">
-            <a class="btn btn-primary" href="{% url 'react:like' data.username %}" role="button">Like</a>
+            <a class="btn btn-primary" href="{% url 'react:like' data.username selected_hobi%}" role="button">Like</a>
         </div>
+        
         <div id="button-wrapper">
-            <a class="btn btn-primary" href="{% url 'react:dislike' %}" role="button">Dislike</a>
+            <a class="btn btn-primary" href="{% url 'react:dislike' selected_hobi %}" role="button">Dislike</a>
         </div>
         <div id="button-wrapper">
           <a class="btn btn-primary" href="/report/user/{{ data.username }}" role="button">Report</a>

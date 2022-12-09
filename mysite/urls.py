@@ -20,7 +20,9 @@ import Home.urls as home
 import report.urls as report
 import LikedBy.urls as likedBy
 import ban.urls as ban
+import Profile.urls as profile
 import React.urls as react
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,5 +33,6 @@ urlpatterns = [
     path('react/', include(react)),
     path('report/', include(report)),
     path('likedBy', include(likedBy)),
-    path('ban/', include(ban))
+    path('ban/', include(ban)),
+    path('profile/', include(profile))
 ]

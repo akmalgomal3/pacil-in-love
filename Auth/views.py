@@ -3,6 +3,7 @@ from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.db import connection
 from Auth.forms import loginForm, registerForm
+from django.contrib import messages
 import datetime
 
 # Create your views here.
@@ -23,12 +24,14 @@ def loginPage(request):
         print(result)
 
         if result == None:
-            return HttpResponseNotFound("The user does not exist")
+            messages.warning(request, "Username does not exist.")
+            return redirect('auth:login')
 
         if result[2] != None:
             current_datetime = datetime.datetime.now()
             if ((current_datetime - result[2]).total_seconds() < 300):
-                return HttpResponseNotFound("This user is temporary ban")
+                messages.warning(request, "This user is temporary ban.")
+                return redirect('auth:login')
 
         cursor.execute("SELECT * FROM profile where username ='"+username+"'")
         result = cursor.fetchone()
@@ -72,10 +75,15 @@ def registerPage(request):
             max_id += 1
             cursor.execute("INSERT INTO list_username (id_username, username) VALUES('"+str(max_id)+"','"+username+"')")
 
-            return HttpResponseRedirect('/homepage')
+            request.session['username'] = username
+            request.session['role'] = 'user'
+            messages.success(request, "Register successed. You must create a profile to proceed to the homepage.")
+
+            return redirect('profile:create_profile')
         
         else:
-            return HttpResponseNotFound("The user already exist")
+            messages.warning(request, "Username sudah dipakai.")
+            return redirect('auth:register')
 
     return render(request, 'registerpage.html', {'form' : form})
     

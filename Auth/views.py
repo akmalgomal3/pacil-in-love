@@ -5,7 +5,7 @@ from django.db import connection
 from Auth.forms import loginForm, registerForm
 from django.contrib import messages
 import datetime
-
+from Profile import *
 # Create your views here.
 def redirectLogin(request):return redirect('auth:login')
 
@@ -47,7 +47,7 @@ def loginPage(request):
         else:
             request.session['role'] = 'user'
 
-        return redirect('home:homepage')
+        return redirect('profile:profile')
 
 
     return render(request, 'loginpage.html', {'form' : form})

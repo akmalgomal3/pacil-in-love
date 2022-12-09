@@ -74,7 +74,7 @@ def createProfilePage(request):
             for hobi in hobby:
                 cursor.execute("INSERT INTO selected_hobi(username, hobi) VALUES ('"+username+"', '"+hobi+"')")
             
-            return redirect('home:homepage')
+            return redirect('profile:profile')
             
     else:
         return redirect('auth:login')

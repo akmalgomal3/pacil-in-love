@@ -1,6 +1,9 @@
 from django.db import connection
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
-from random import randrange
+
+from Auth.views import checkLoggedIn
+
 
 def fetch(cursor):
     columns = [col[0] for col in cursor.description]
@@ -12,9 +15,104 @@ def fetch(cursor):
 
 # Create your views here.
 def index(request):
-    return redirect("home:index")
+    if not checkLoggedIn(request):
+        return redirect('auth:login')
+
+    cursor = connection.cursor()
+    cursor.execute("set search_path to public")
+
+    username = request.session['username']
+    role = request.session['role']
+
+    cursor.execute(f'''
+        select liked_user
+        from "like"
+        where username = '%s'    
+        ''' % (username))
+
+    liked_user = cursor.fetchall()
+    print(liked_user)
+
+    cursor.execute(f'''
+                    select username
+                    from list_username
+                    where username != '%s' and id_username != 1
+                    order by random()
+                    ''' % (username))
+
+    user_list = cursor.fetchall()
+    print(user_list)
+    for i in user_list:
+        if i not in liked_user:
+            user = i
+            break
+
+    print(user)
+    cursor.execute(f'''
+        select *
+        from profile p full join gender g on p.gender = g.id_gender
+        where username = '%s'
+            ''' % (user))
+
+    data_user = fetch(cursor)
+    print(data_user)
+
+    cursor.execute("select * from list_hobi")
+    idHobi = fetch(cursor)
+
+
+    return render(request, 'react_home.html', {'data' : data_user, 'idsHobby': idHobi, 'selected_hobi' : None})
+
+def filterHobby(request, hobbyID):
+    if not checkLoggedIn(request):
+        return redirect('auth:login')
+
+    cursor = connection.cursor()
+    cursor.execute("set search_path to public")
+    response = {}
+    username = request.session['username']
+    cursor.execute("select * from list_hobi")
+    idHobi = fetch(cursor)
+    print(hobbyID)
+    cursor.execute(f'''
+    select liked_user
+    from "like"
+    where username = '%s'    
+    ''' % (username))
+
+    liked_user = cursor.fetchall()
+
+    cursor.execute(f'''
+                select list_username.username
+                from list_username right join selected_hobi sh on list_username.username = sh.username
+                where list_username.username != '%s' and list_username.id_username != 1 and hobi = '%s'
+                order by random()
+                ''' % (username, hobbyID))
+
+    user_list = cursor.fetchall()
+    print(user_list)
+    user = None
+    for i in user_list:
+        if i not in liked_user:
+            user = i
+            break  
+    if user == None:
+        return redirect('react:index')
+    print(user)
+    cursor.execute(f'''
+        select *
+        from profile p full join gender g on p.gender = g.id_gender
+        where username = '%s'
+            ''' % (user))
+
+    data_user = fetch(cursor)
+    print(data_user)
+    print(hobbyID)
+    return render(request, 'react_home.html', {'data' : data_user, 'idsHobby': idHobi, 'selected_hobi':hobbyID})
+
+
     
-def like(request):
+def like(request, user, id_hobi):
 
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
@@ -22,49 +120,38 @@ def like(request):
     username = request.session['username']
     role = request.session['role']
 
-    # cursor.execute(f'''
-    #                 select max(id_username), 
-    #                 from list_username
-    #                 where username != '%s'
-    #                 ''' % (username))
-
-    # max_random = cursor.fetchone()
-
+    cursor.execute(f'''
+        select liked_user
+        from "like"
+        where username = '%s'    
+    ''' % (username))
     
-    if request.method == 'POST':
-        data = request.POST
-        nama = data['user']
+    liked_user = cursor.fetchall()
 
-        print(nama)
-        if nama != '':
+    nama = user
+
+    print(nama)
+    if nama != '':
+        if nama not in liked_user:
             cursor.execute(f'''
                 insert into "like" values ('%s', '%s')
             ''' % (username, nama))
 
-            cursor.execute(f'''
-                select liked_user
-                from like
-                where username = '%s'    
-            ''' % (nama))
+        cursor.execute(f'''
+            select liked_user
+            from "like"
+            where username = '%s'    
+        ''' % (nama))
 
-            list_liked = cursor.fetchall()
+        list_liked = cursor.fetchall()
 
-            if username in list_liked:
-                return render(request)
+        if username in list_liked:
+            return redirect('react:match')
 
-    return render(request)
+    return redirect('/react/' + id_hobi)
 
-def dislike(request):
-    cursor = connection.cursor()
-    cursor.execute("set search_path to public")
-    
-    username = request.session['username']
-    role = request.session['role']
-    
-    if request.method == "POST":
-        data = request.POST
-        nama = data['user']
+def dislike(request, id_hobi):
+    return redirect('/react/' + id_hobi)
 
-        return redirect('home:homepage')
-    
-    return render(request)
+def match(request):
+    return render(request, 'match.html', {})

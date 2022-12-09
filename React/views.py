@@ -1,4 +1,5 @@
 from django.db import connection
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 from Auth.views import checkLoggedIn
@@ -56,9 +57,62 @@ def index(request):
     data_user = fetch(cursor)
     print(data_user)
 
-    return render(request, 'react_home.html', {'data' : data_user})
+    cursor.execute("select * from list_hobi")
+    idHobi = fetch(cursor)
+
+
+    return render(request, 'react_home.html', {'data' : data_user, 'idsHobby': idHobi, 'selected_hobi' : None})
+
+def filterHobby(request, hobbyID):
+    if not checkLoggedIn(request):
+        return redirect('auth:login')
+
+    cursor = connection.cursor()
+    cursor.execute("set search_path to public")
+    response = {}
+    username = request.session['username']
+    cursor.execute("select * from list_hobi")
+    idHobi = fetch(cursor)
+    print(hobbyID)
+    cursor.execute(f'''
+    select liked_user
+    from "like"
+    where username = '%s'    
+    ''' % (username))
+
+    liked_user = cursor.fetchall()
+
+    cursor.execute(f'''
+                select list_username.username
+                from list_username right join selected_hobi sh on list_username.username = sh.username
+                where list_username.username != '%s' and list_username.id_username != 1 and hobi = '%s'
+                order by random()
+                ''' % (username, hobbyID))
+
+    user_list = cursor.fetchall()
+    print(user_list)
+    user = None
+    for i in user_list:
+        if i not in liked_user:
+            user = i
+            break  
+    if user == None:
+        return redirect('react:index')
+    print(user)
+    cursor.execute(f'''
+        select *
+        from profile p full join gender g on p.gender = g.id_gender
+        where username = '%s'
+            ''' % (user))
+
+    data_user = fetch(cursor)
+    print(data_user)
+    print(hobbyID)
+    return render(request, 'react_home.html', {'data' : data_user, 'idsHobby': idHobi, 'selected_hobi':hobbyID})
+
+
     
-def like(request, user):
+def like(request, user, id_hobi):
 
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
@@ -94,10 +148,10 @@ def like(request, user):
         if username in list_liked:
             return redirect('react:match')
 
-    return redirect('react:index')
+    return redirect('/react/' + id_hobi)
 
-def dislike(request):
-    return redirect('react:index')
+def dislike(request, id_hobi):
+    return redirect('/react/' + id_hobi)
 
 def match(request):
     return render(request, 'match.html', {})

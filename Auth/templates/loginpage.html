@@ -4,23 +4,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     </style>
     <title>Pacil in Love</title>
 </head>
-<body>
-    <h1>Login Form</h1>
+<body class="container" style="text-align:center">
+    <div class="container rounded bg-white mt-5 mb-5">
+        <div class="d-flex justify-content-center align-items-center mb-auto">
+            <h3 class="text-center" >PACIL IN LOVE</h3>
+        </div>
+        <div class="d-flex justify-content-center align-items-center mb-auto">
+            <h4 class="text-center" >SIGN IN</h4>
+        </div>
+        
+        <div style="margin: 30px;  text-align: center;">
 
-    <form action="" method="post">
-        {% csrf_token %}
-        <table>
-            {{ form.as_table }}
-        </table>
-        <input type="submit" value="Submit">
-    </form>
+            {% for message in messages %}
+                {% if message %}
+                    <div class="alert alert-warning" style="font-size: large;">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
 
-    <br>
-    <a href="{% url 'auth:register' %}"><button>Don't have an account yet?  Sign Up</button></a>
-    <a href="{% url 'auth:logout' %}"><button>logout</button></a>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="row mt-3 form-group">
+                <div class="card mb-3 content">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6"><h5>Username</h5></div>
+                            <div class="col-md-6"><h5>{{ form.username }}</h5></div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6"><h5>Password</h5></div>
+                            <div class="col-md-6 text-secondary"><h5>{{ form.password }}</h5></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-center"><button type="submit" class="btn btn-outline-primary">Sign In</button></div>
+        </form>
+    </div>
+
+    <div style="text-align:center">
+        <a href="{% url 'auth:register' %}"><button>Don't have an account yet?  Sign Up</button></a>
+        <a href="{% url 'auth:logout' %}"><button>logout</button></a>
+    </div>
+
 </body>
 </html>

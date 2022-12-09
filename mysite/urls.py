@@ -32,4 +32,5 @@ urlpatterns = [
     path('ban/', include(ban)),
     path('react/', include(react)),
     path('report/', include(report)),
+    path('profile/', include(profile))
 ]

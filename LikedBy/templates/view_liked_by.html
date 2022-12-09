@@ -1,0 +1,39 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    </style>
+    <title>Pacil in Love</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <div class="container px-4">
+            <a class="navbar-brand" th:href="@{/}">Central Custom Keyboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link">Create Article</a></li>
+                    <li class="nav-item"><a class="nav-link">Bank Info</a></li>
+                    <li class="nav-item"><a class="nav-link">Create Keyboard</a></li>
+                    <li class="nav-item"><a class="nav-link">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <h1>Create Profile</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+
+    <br>
+    <a href="{% url 'auth:logout' %}"><button>logout</button></a>
+</body>
+</html>

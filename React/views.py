@@ -32,24 +32,24 @@ def index(request):
     liked_user = cursor.fetchall()
     print(liked_user)
 
-    while True:
-        cursor.execute(f'''
-                        select username
-                        from list_username
-                        where username != '%s' and id_username != 1
-                        order by random()
-                        limit 1
-                        ''' % (username))
+    cursor.execute(f'''
+                    select username
+                    from list_username
+                    where username != '%s' and id_username != 1
+                    order by random()
+                    ''' % (username))
 
-        user = cursor.fetchone()
-        if user not in liked_user:
+    user_list = cursor.fetchall()
+    print(user_list)
+    for i in user_list:
+        if i not in liked_user:
+            user = i
             break
 
     print(user)
-    # if user != '':
     cursor.execute(f'''
         select *
-        from profile
+        from profile p full join gender g on p.gender = g.id_gender
         where username = '%s'
             ''' % (user))
 
@@ -91,16 +91,13 @@ def like(request, user):
 
         list_liked = cursor.fetchall()
 
-        # if username in list_liked:
-        #     return render(request)
+        if username in list_liked:
+            return redirect('react:match')
 
     return redirect('react:index')
 
 def dislike(request):
-    # cursor = connection.cursor()
-    # cursor.execute("set search_path to public")
-    
-    # username = request.session['username']
-    # role = request.session['role']
-    
     return redirect('react:index')
+
+def match(request):
+    return render(request, 'match.html', {})

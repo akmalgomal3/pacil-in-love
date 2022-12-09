@@ -1,11 +1,3 @@
-{% load static %}
-
-
-{% block css %}
-
-{% endblock %}
-
-{% block title %}
 <head>
     <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,39 +16,16 @@
     <link href="narrow-jumbotron.css" rel="stylesheet">
   </head>
   
-  
-
-<title>Report</title>
-{% endblock title %}
-<body>
-{% include 'navbar.html' %}
-    <div class="container">
-      
-	<form action="" method="POST">
-      {% csrf_token %}
-      <div class="jumbotron">
-        {% if nama_pengguna %}
-                    {% for i in nama_pengguna %}
-        <h1 class="display-3">Name : {{ i.0 }}</h1>
-        {% endfor %}
-        {% endif %}
-        <div><label for="idReason">Reason:</label>
-        <select class="form-control" name="idReason" id="idReason">
-          <option value="rr001">User ini menganggu</option>
-          <option value="rr002">User ini melanggar Guidelines</option>
-          <option value="rr003">User ini mengancam</option>
-
-            </select><br></div>
-        <div id="button-wrapper">
-                <button id="submit" type="submit">Report</button>
-            </div>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Pacil in Love</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link" href="/likedby">Liked By</a>
+        <a class="nav-item nav-link" href="/react">React</a>
       </div>
-
-      
-
-    </form></div> <!-- /container -->
-  
-
-</body>
-</html>
-
+    </div>
+  </nav>

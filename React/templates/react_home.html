@@ -14,6 +14,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <title>React</title>
+    {% include 'navbar.html' %}
 
     <!-- Bootstrap core CSS
     <link href="../../css/editor.css" rel="stylesheet"> -->
@@ -25,9 +26,7 @@
 <title>React</title>
 {% endblock title %}
 <body>
- <p>test</p>
  {% for data in data %}
- <h1>{{data.username}}</h1>
     <!-- <div class="container"> -->
       
       <!-- <div class="jumbotron"> -->
@@ -42,6 +41,9 @@
         <div id="button-wrapper">
             <a class="btn btn-primary" href="{% url 'react:dislike' %}" role="button">Dislike</a>
         </div>
+        <div id="button-wrapper">
+          <a class="btn btn-primary" href="/report/user/{{ data.username }}" role="button">Report</a>
+      </div>
         <!-- {% endif %} -->
       <!-- </div> -->
     <!-- </div> /container -->

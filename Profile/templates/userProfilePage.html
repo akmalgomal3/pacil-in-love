@@ -59,7 +59,7 @@
             {% if liked %}
             <div class="container d-flex justify-content-end active"><button type="button" class="btn btn-outline-primary">Liked</button></div>
             {% else %}
-            <div class="container d-flex justify-content-end"><a href=""><button type="button" class="btn btn-outline-primary">Like Back</button></a></div>
+            <div class="container d-flex justify-content-end"><a href="{% url 'react:like' profile.username None %}"><button type="button" class="btn btn-outline-primary">Like Back</button></a></div>
             {% endif %}
         </div>
 

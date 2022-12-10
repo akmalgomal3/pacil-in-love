@@ -39,7 +39,7 @@ def report(request, pengguna):
 
             cursor.execute("INSERT INTO REPORTED_USER VALUES (%s, %s)", [nama, id_Reason])
 
-            return redirect('/homepage')
+            return redirect('/profile')
 
         return render(request, 'report.html', response)
 

@@ -5,6 +5,7 @@ from django.shortcuts import *
 import django.db as db
 from django.db import connection
 from Home import *
+from Profile import *
 
 # Create your views here.
 def report(request, pengguna):
@@ -20,6 +21,10 @@ def report(request, pengguna):
         cursor.execute("SELECT username FROM pengguna where username = %s", [pengguna])
         nama_pengguna = cursor.fetchall()
         response['nama_pengguna'] = nama_pengguna
+
+        cursor.execute("SELECT nama_lengkap FROM profile where username = %s", [pengguna])
+        nama_lengkap = cursor.fetchall()
+        response['nama_lengkap'] = nama_lengkap
 
         kode = "rr%"
 

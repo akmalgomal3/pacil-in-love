@@ -5,6 +5,7 @@ from . import views
 app_name = 'profile'
 
 urlpatterns = [
+    path('<str:username>', views.user_profile, name='user_profile'),
     path('', views.profile, name='profile'),
     path('create_profile', views.createProfilePage, name='create_profile'),
     path('update_profile', views.updateProfilePage, name='update_profile'),

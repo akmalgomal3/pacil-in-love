@@ -178,4 +178,4 @@ def dislike(request, id_hobi):
     return redirect('/react/' + id_hobi)
 
 def match(request):
-    return render(request, 'match.html', {})
+    return render(request, 'match.html', {'selected_hobi' : None})

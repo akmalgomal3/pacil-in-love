@@ -60,8 +60,19 @@ def index(request):
     cursor.execute("select * from list_hobi")
     idHobi = fetch(cursor)
 
+    cursor.execute(f'''
+        select *
+        from selected_hobi sh left join list_hobi lh on sh.hobi = lh.id_hobi
+        where username = '%s'
+            ''' % (user))
+    hobies = fetch(cursor)
 
-    return render(request, 'react_home.html', {'data' : data_user, 'idsHobby': idHobi, 'selected_hobi' : None})
+    list_hobi = []
+    for hobi in hobies:
+        list_hobi.append(hobi['nama_hobi'])
+    print(list_hobi)
+
+    return render(request, 'react_home.html', {'data' : data_user, 'hobi' : list_hobi, 'idsHobby' : idHobi, 'selected_hobi' : None})
 
 def filterHobby(request, hobbyID):
     if not checkLoggedIn(request):
@@ -69,7 +80,7 @@ def filterHobby(request, hobbyID):
 
     cursor = connection.cursor()
     cursor.execute("set search_path to public")
-    response = {}
+
     username = request.session['username']
     cursor.execute("select * from list_hobi")
     idHobi = fetch(cursor)
@@ -106,9 +117,22 @@ def filterHobby(request, hobbyID):
             ''' % (user))
 
     data_user = fetch(cursor)
+    
+    cursor.execute(f'''
+        select *
+        from selected_hobi sh left join list_hobi lh on sh.hobi = lh.id_hobi
+        where username = '%s'
+            ''' % (user))
+    hobies = fetch(cursor)
+
+    list_hobi = []
+    for hobi in hobies:
+        list_hobi.append(hobi['nama_hobi'])
+    print(list_hobi)
+    
     print(data_user)
     print(hobbyID)
-    return render(request, 'react_home.html', {'data' : data_user, 'idsHobby': idHobi, 'selected_hobi':hobbyID})
+    return render(request, 'react_home.html', {'data' : data_user, 'hobi' : list_hobi, 'idsHobby': idHobi, 'selected_hobi':hobbyID})
 
 
     

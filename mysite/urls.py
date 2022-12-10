@@ -28,11 +28,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(auth)),
     path('homepage/', include(home)),
-    path('likedBy', include(likedBy)),
+    path('likedby/', include(likedBy)),
     path('ban/', include(ban)),
     path('react/', include(react)),
     path('report/', include(report)),
-    path('likedBy', include(likedBy)),
-    path('ban/', include(ban)),
     path('profile/', include(profile))
 ]

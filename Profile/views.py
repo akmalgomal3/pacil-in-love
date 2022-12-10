@@ -5,11 +5,68 @@ from django.db import connection
 from Profile.forms import createProfileForm, updateProfileForm, updatePassword
 from django.contrib import messages
 
+def fetch(cursor):
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
+
+def user_profile(request, username):
+    current_user = request.session['username']
+    cursor = connection.cursor()
+
+    cursor.execute("SET SEARCH_PATH TO public")
+    cursor.execute("SELECT * from profile where username = '"+username+"'")
+    temp = cursor.fetchone()
+
+    print("USER=", username)
+    print("TEMP=", temp)
+
+    cursor.execute("SELECT * from selected_hobi where username = '"+username+"'")
+    hobi = cursor.fetchall()
+    print(hobi)
+    list_hobi = []
+    for data in hobi:
+        cursor.execute("SELECT nama_hobi from list_hobi where id_hobi = '"+data[1]+"'")
+        list_hobi.append(cursor.fetchone()[0])
+
+    gender = ""
+    if temp[2] == 'g001':
+        gender = 'Laki-laki'
+    elif temp[2] == 'g002':
+        gender = 'Perempuan'
+    
+    print(temp[7])
+
+    profile = {"name":temp[4],
+                "username":temp[0],
+                "email":temp[1],
+                "jenis_kelamin":gender,
+                "nomor":temp[3],
+                "umur":temp[6],
+                "image":temp[7],
+                "hobby":list_hobi}
+    
+    cursor.execute(f'''
+    SELECT username FROM "like" 
+    WHERE liked_user = '%s'
+    ''' % username)
+    liked_by = fetch(cursor)
+    liked_by_current_user = False
+    for user in liked_by:
+        liker = user.get("username")
+        if liker == current_user:
+            liked_by_current_user = True
+            break
+
+    cursor.close()
+    return render(request, 'userProfilePage.html', {'profile': profile, 'liked': liked_by_current_user})  
+
 def profile(request):
     if request.session.has_key('username'):
         username = request.session['username']
         cursor = connection.cursor()
-
 
         cursor.execute("SET SEARCH_PATH TO public")
         cursor.execute("SELECT * from profile where username = '"+username+"'")

@@ -31,7 +31,7 @@ def index(request):
         ''' % (username))
 
     liked_user = cursor.fetchall()
-    print(liked_user)
+
 
     cursor.execute(f'''
                     select username
@@ -41,13 +41,13 @@ def index(request):
                     ''' % (username))
 
     user_list = cursor.fetchall()
-    print(user_list)
+
     for i in user_list:
         if i not in liked_user:
             user = i
             break
 
-    print(user)
+
     cursor.execute(f'''
         select *
         from profile p full join gender g on p.gender = g.id_gender
@@ -55,7 +55,7 @@ def index(request):
             ''' % (user))
 
     data_user = fetch(cursor)
-    print(data_user)
+
 
     cursor.execute("select * from list_hobi")
     idHobi = fetch(cursor)
@@ -70,7 +70,7 @@ def index(request):
     list_hobi = []
     for hobi in hobies:
         list_hobi.append(hobi['nama_hobi'])
-    print(list_hobi)
+
 
     return render(request, 'react_home.html', {'data' : data_user, 'hobi' : list_hobi, 'idsHobby' : idHobi, 'selected_hobi' : None})
 
@@ -84,7 +84,7 @@ def filterHobby(request, hobbyID):
     username = request.session['username']
     cursor.execute("select * from list_hobi")
     idHobi = fetch(cursor)
-    print(hobbyID)
+
     cursor.execute(f'''
     select liked_user
     from "like"
@@ -101,7 +101,7 @@ def filterHobby(request, hobbyID):
                 ''' % (username, hobbyID))
 
     user_list = cursor.fetchall()
-    print(user_list)
+
     user = None
     for i in user_list:
         if i not in liked_user:
@@ -109,7 +109,7 @@ def filterHobby(request, hobbyID):
             break  
     if user == None:
         return redirect('react:index')
-    print(user)
+
     cursor.execute(f'''
         select *
         from profile p full join gender g on p.gender = g.id_gender
@@ -128,10 +128,7 @@ def filterHobby(request, hobbyID):
     list_hobi = []
     for hobi in hobies:
         list_hobi.append(hobi['nama_hobi'])
-    print(list_hobi)
-    
-    print(data_user)
-    print(hobbyID)
+
     return render(request, 'react_home.html', {'data' : data_user, 'hobi' : list_hobi, 'idsHobby': idHobi, 'selected_hobi':hobbyID})
 
 
@@ -154,7 +151,7 @@ def like(request, user, id_hobi):
 
     nama = user
 
-    print(nama)
+
     if nama != '':
         if nama not in liked_user:
             cursor.execute(f'''
@@ -168,9 +165,14 @@ def like(request, user, id_hobi):
         ''' % (nama))
 
         list_liked = cursor.fetchall()
+        print (list_liked)
 
-        if username in list_liked:
-            return redirect('react:match')
+        for i in range(len(list_liked)):
+            if username == (list_liked[i][0]):
+                return redirect('react:match')
+
+        # if username[0] in list_liked:
+        #     return redirect('react/match/')
 
     return redirect('/react/' + id_hobi)
 

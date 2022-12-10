@@ -36,10 +36,13 @@
 
 <body class='container'>
       <div><label for="list_hobi">Filter By:</label>
-        <a href="{% url 'react:index' %}">None</a>
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="{% url 'react:index' %}">None</a></li>
         {% for i in idsHobby %}
-        <a href="{% url 'react:filterHobby' i.id_hobi%}">{{i.nama_hobi}}</a>
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="{% url 'react:filterHobby' i.id_hobi%}">{{i.nama_hobi}}</a></li>
         {% endfor %}
+        
       </div>
       <div class="container rounded bg-white mt-5 mb-5 justify-align-center">
           <div class="d-flex justify-content-between align-items-center mb-3">
